@@ -1,1 +1,309 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Graphic Novel Storyboard</title>
+  <style>
+    :root {
+      --bg: #09090f;
+      --panel: #151527;
+      --ink: #f7f7ff;
+      --accent: #68d3ff;
+      --muted: #9da0b8;
+      --glass: rgba(10, 12, 28, 0.62);
+      --border: rgba(255, 255, 255, 0.2);
+      --shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
+    }
 
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body {
+      scroll-snap-type: y mandatory;
+    }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: grid;
+      align-items: stretch;
+      transition: transform 900ms cubic-bezier(0.21, 0.99, 0.3, 1), opacity 900ms ease;
+      opacity: 0.12;
+      transform: scale(0.98);
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page.active {
+      opacity: 1;
+      transform: scale(1);
+    }
+
+    .split-page {
+      grid-template-columns: minmax(320px, 58%) minmax(280px, 42%);
+    }
+
+    .panel-image,
+    .panel-text {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    .panel-image {
+      background-size: cover;
+      background-position: center;
+    }
+
+    .panel-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      background: linear-gradient(180deg, rgba(20, 17, 44, 0.84), rgba(11, 12, 27, 0.92));
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .kicker {
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    h1,
+    h2 {
+      line-height: 1.12;
+      text-wrap: balance;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 4vw, 3.4rem);
+      max-width: 18ch;
+    }
+
+    h2 {
+      font-size: clamp(1.4rem, 2.8vw, 2.3rem);
+    }
+
+    p {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 45ch;
+      font-size: clamp(1rem, 1.2vw, 1.15rem);
+    }
+
+    .full-page {
+      place-items: center;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .floating-card {
+      position: relative;
+      z-index: 1;
+      width: min(90vw, 700px);
+      padding: clamp(1.3rem, 3.5vw, 2.5rem);
+      border-radius: 20px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      animation: drift 6s ease-in-out infinite;
+    }
+
+    @keyframes drift {
+      0%,
+      100% {
+        transform: translateY(0);
+      }
+      50% {
+        transform: translateY(-7px);
+      }
+    }
+
+    .nav-dots {
+      position: fixed;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 0.65rem;
+      z-index: 99;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.6);
+      background: transparent;
+      transition: transform 250ms ease, background 250ms ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      transform: scale(1.4);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 98;
+      color: #d2d5ea;
+      background: rgba(9, 9, 15, 0.66);
+      border: 1px solid rgba(255, 255, 255, 0.15);
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      font-size: 0.83rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 880px) {
+      .split-page {
+        grid-template-columns: 1fr;
+      }
+
+      .panel-image {
+        min-height: 44vh;
+      }
+
+      .panel-text {
+        min-height: 56vh;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+      }
+
+      .nav-dots {
+        right: 0.55rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-dots" aria-label="Page navigation"></nav>
+  <div class="hint">Scroll to turn pages</div>
+
+  <section class="page split-page" id="page-1">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Issue 01</span>
+      <h1>Midnight District: A cinematic web graphic novel layout.</h1>
+      <p>
+        Yes—we can build exactly what you described: huge artwork on one side and immersive text on the other.
+        This demo uses page-like sections, smooth transitions, and a story rhythm you can expand with your own panels.
+      </p>
+    </article>
+  </section>
+
+  <section class="page split-page" id="page-2">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Scene 02</span>
+      <h2>The train station trembled as aurora fire crossed the sky.</h2>
+      <p>
+        Keep each page readable like a comic panel: one strong image and one focused narration block.
+        The layout is responsive, so on phones it stacks image over text to preserve pacing.
+      </p>
+    </article>
+  </section>
+
+  <section class="page full-page" id="page-3" style="background-image: url('https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1800&q=80');">
+    <article class="floating-card">
+      <span class="kicker">Full Bleed Spread</span>
+      <h2>A full-screen panel with floating narration for dramatic beats.</h2>
+      <p>
+        Use these moments for reveals, flashbacks, title cards, or emotional peaks. The text panel floats over the art with a glass effect so details still shine through.
+      </p>
+    </article>
+  </section>
+
+  <section class="page split-page" id="page-4">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Scene 04</span>
+      <h2>Every chapter can carry its own visual temperature.</h2>
+      <p>
+        Swap backgrounds per scene, change accent colors, and animate page entrances with CSS to create a tactile "panel-turn" sensation.
+      </p>
+    </article>
+  </section>
+
+  <section class="page full-page" id="page-5" style="background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=1800&q=80');">
+    <article class="floating-card">
+      <span class="kicker">Chapter End</span>
+      <h2>Another full-screen frame with anchored story text.</h2>
+      <p>
+        This pattern is ideal for cliffhangers and chapter endings. Add sound effects, dialogue bubbles, or subtle parallax later if you want richer motion.
+      </p>
+    </article>
+  </section>
+
+  <script>
+    const pages = [...document.querySelectorAll('.page')];
+    const nav = document.querySelector('.nav-dots');
+
+    pages.forEach((page, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.setAttribute('aria-label', `Go to page ${index + 1}`);
+      dot.addEventListener('click', () => {
+        page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      nav.appendChild(dot);
+    });
+
+    const dots = [...document.querySelectorAll('.dot')];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = pages.indexOf(entry.target);
+            pages.forEach((p) => p.classList.remove('active'));
+            dots.forEach((d) => d.classList.remove('active'));
+            entry.target.classList.add('active');
+            if (idx >= 0) dots[idx].classList.add('active');
+          }
+        });
+      },
+      {
+        threshold: 0.5,
+      }
+    );
+
+    pages.forEach((page) => observer.observe(page));
+  </script>
+</body>
+</html>
