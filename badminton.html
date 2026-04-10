@@ -1,0 +1,284 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Badminton Club Story Site</title>
+  <style>
+    :root {
+      --bg: #07120f;
+      --panel: #10251e;
+      --ink: #f4fff9;
+      --accent: #5bf0a5;
+      --muted: #b4cfc2;
+      --glass: rgba(8, 24, 20, 0.62);
+      --border: rgba(255, 255, 255, 0.25);
+      --shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html,
+    body {
+      width: 100%;
+      min-height: 100%;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: Inter, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    body { scroll-snap-type: y mandatory; }
+
+    .page {
+      position: relative;
+      min-height: 100vh;
+      width: 100%;
+      scroll-snap-align: start;
+      overflow: hidden;
+      display: grid;
+      align-items: stretch;
+      transition: transform 900ms cubic-bezier(0.21, 0.99, 0.3, 1), opacity 900ms ease;
+      opacity: 0.12;
+      transform: scale(0.98);
+    }
+
+    .page::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(140deg, rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.2));
+      z-index: 0;
+      pointer-events: none;
+    }
+
+    .page.active { opacity: 1; transform: scale(1); }
+
+    .split-page { grid-template-columns: minmax(320px, 58%) minmax(280px, 42%); }
+
+    .panel-image,
+    .panel-text {
+      position: relative;
+      z-index: 1;
+      min-height: 100vh;
+    }
+
+    .panel-image { background-size: cover; background-position: center; }
+
+    .panel-text {
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      gap: 1.25rem;
+      padding: clamp(1.5rem, 4vw, 4rem);
+      background: linear-gradient(180deg, rgba(9, 35, 28, 0.84), rgba(6, 20, 16, 0.92));
+      border-left: 1px solid rgba(255, 255, 255, 0.14);
+    }
+
+    .kicker {
+      color: var(--accent);
+      letter-spacing: 0.08em;
+      text-transform: uppercase;
+      font-size: 0.76rem;
+      font-weight: 700;
+    }
+
+    h1, h2 { line-height: 1.12; text-wrap: balance; }
+    h1 { font-size: clamp(2rem, 4vw, 3.4rem); max-width: 18ch; }
+    h2 { font-size: clamp(1.4rem, 2.8vw, 2.3rem); }
+
+    p,
+    li {
+      color: var(--muted);
+      line-height: 1.7;
+      max-width: 55ch;
+      font-size: clamp(1rem, 1.2vw, 1.1rem);
+    }
+
+    ul { padding-left: 1.15rem; display: grid; gap: 0.35rem; }
+
+    .full-page {
+      place-items: center;
+      background-size: cover;
+      background-position: center;
+    }
+
+    .floating-card {
+      position: relative;
+      z-index: 1;
+      width: min(92vw, 760px);
+      padding: clamp(1.3rem, 3.5vw, 2.5rem);
+      border-radius: 20px;
+      background: var(--glass);
+      border: 1px solid var(--border);
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(10px);
+      animation: drift 6s ease-in-out infinite;
+    }
+
+    @keyframes drift {
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
+    }
+
+    .nav-dots {
+      position: fixed;
+      top: 50%;
+      right: 1rem;
+      transform: translateY(-50%);
+      display: grid;
+      gap: 0.65rem;
+      z-index: 99;
+    }
+
+    .dot {
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      border: 1px solid rgba(255, 255, 255, 0.7);
+      background: transparent;
+      transition: transform 250ms ease, background 250ms ease;
+      cursor: pointer;
+    }
+
+    .dot.active {
+      transform: scale(1.4);
+      background: var(--accent);
+      border-color: var(--accent);
+    }
+
+    .hint {
+      position: fixed;
+      bottom: 1rem;
+      left: 50%;
+      transform: translateX(-50%);
+      z-index: 98;
+      color: #e1f6ea;
+      background: rgba(3, 18, 13, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.18);
+      border-radius: 999px;
+      padding: 0.45rem 0.95rem;
+      font-size: 0.83rem;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    @media (max-width: 880px) {
+      .split-page { grid-template-columns: 1fr; }
+      .panel-image { min-height: 44vh; }
+      .panel-text {
+        min-height: 56vh;
+        border-left: none;
+        border-top: 1px solid rgba(255, 255, 255, 0.14);
+      }
+      .nav-dots { right: 0.55rem; }
+    }
+  </style>
+</head>
+<body>
+  <nav class="nav-dots" aria-label="Page navigation"></nav>
+  <div class="hint">Scroll to explore the club guide</div>
+
+  <section class="page split-page" id="page-1">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">City Smash Club</span>
+      <h1>Welcome to our badminton club and beginner-friendly game guide.</h1>
+      <p>
+        This version of the site keeps the same animated storytelling format but focuses on badminton: club culture, rules, scoring, and tournament inspiration.
+      </p>
+    </article>
+  </section>
+
+  <section class="page split-page" id="page-2">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1544525776-14a898f8f86f?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">About the Game</span>
+      <h2>Badminton is a fast racket sport powered by reflexes, placement, and timing.</h2>
+      <p>
+        You can play singles (1v1) or doubles (2v2). Unlike many racket sports, players hit a shuttlecock that can exceed 300 km/h in elite play.
+      </p>
+    </article>
+  </section>
+
+  <section class="page full-page" id="page-3" style="background-image: url('https://images.unsplash.com/photo-1626224814784-43d5f6f8b4de?auto=format&fit=crop&w=1800&q=80');">
+    <article class="floating-card">
+      <span class="kicker">Quick Rules</span>
+      <h2>Core badminton rules every club member should know.</h2>
+      <ul>
+        <li>Matches are best of 3 games to 21 points.</li>
+        <li>You must win by 2 points (cap at 30 in a game).</li>
+        <li>A point is scored on every rally (rally-point system).</li>
+        <li>At 11 points, players get a short mid-game interval.</li>
+        <li>Sides are changed at the end of each game.</li>
+      </ul>
+    </article>
+  </section>
+
+  <section class="page split-page" id="page-4">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Serving & Scoring</span>
+      <h2>Serve diagonally and keep the shuttle below waist level when striking.</h2>
+      <p>
+        In doubles, teammates alternate service courts after winning points on serve. In singles, even score serves from the right service court, odd from the left.
+      </p>
+    </article>
+  </section>
+
+  <section class="page split-page" id="page-5">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Equipment & Training</span>
+      <h2>Start with a light racket, court shoes, and consistent footwork drills.</h2>
+      <p>
+        Club sessions include warmups, shadow footwork, drop-shot practice, and friendly matches. Beginners can progress quickly with regular movement and control training.
+      </p>
+    </article>
+  </section>
+
+  <section class="page full-page" id="page-6" style="background-image: url('https://images.unsplash.com/photo-1626224805558-cb1f0f9905cb?auto=format&fit=crop&w=1800&q=80');">
+    <article class="floating-card">
+      <span class="kicker">Tournament Nights</span>
+      <h2>Experience the energy of local ladders and weekend competitions.</h2>
+      <p>
+        Use this full-image style for event promotions, finals highlights, club announcements, and seasonal tournament galleries.
+      </p>
+    </article>
+  </section>
+
+  <script>
+    const pages = [...document.querySelectorAll('.page')];
+    const nav = document.querySelector('.nav-dots');
+
+    pages.forEach((page, index) => {
+      const dot = document.createElement('button');
+      dot.className = 'dot';
+      dot.setAttribute('aria-label', `Go to section ${index + 1}`);
+      dot.addEventListener('click', () => {
+        page.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      });
+      nav.appendChild(dot);
+    });
+
+    const dots = [...document.querySelectorAll('.dot')];
+
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach((entry) => {
+          if (entry.isIntersecting) {
+            const idx = pages.indexOf(entry.target);
+            pages.forEach((p) => p.classList.remove('active'));
+            dots.forEach((d) => d.classList.remove('active'));
+            entry.target.classList.add('active');
+            if (idx >= 0) dots[idx].classList.add('active');
+          }
+        });
+      },
+      { threshold: 0.5 }
+    );
+
+    pages.forEach((page) => observer.observe(page));
+  </script>
+</body>
+</html>
