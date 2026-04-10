@@ -3,24 +3,20 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Graphic Novel Storyboard</title>
+  <title>Badminton Club Story Site</title>
   <style>
     :root {
-      --bg: #09090f;
-      --panel: #151527;
-      --ink: #f7f7ff;
-      --accent: #68d3ff;
-      --muted: #9da0b8;
-      --glass: rgba(10, 12, 28, 0.62);
-      --border: rgba(255, 255, 255, 0.2);
+      --bg: #07120f;
+      --panel: #10251e;
+      --ink: #f4fff9;
+      --accent: #5bf0a5;
+      --muted: #b4cfc2;
+      --glass: rgba(8, 24, 20, 0.62);
+      --border: rgba(255, 255, 255, 0.25);
       --shadow: 0 24px 48px rgba(0, 0, 0, 0.42);
     }
 
-    * {
-      box-sizing: border-box;
-      margin: 0;
-      padding: 0;
-    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
 
     html,
     body {
@@ -32,9 +28,7 @@
       overflow-x: hidden;
     }
 
-    body {
-      scroll-snap-type: y mandatory;
-    }
+    body { scroll-snap-type: y mandatory; }
 
     .page {
       position: relative;
@@ -58,14 +52,9 @@
       pointer-events: none;
     }
 
-    .page.active {
-      opacity: 1;
-      transform: scale(1);
-    }
+    .page.active { opacity: 1; transform: scale(1); }
 
-    .split-page {
-      grid-template-columns: minmax(320px, 58%) minmax(280px, 42%);
-    }
+    .split-page { grid-template-columns: minmax(320px, 58%) minmax(280px, 42%); }
 
     .panel-image,
     .panel-text {
@@ -74,10 +63,7 @@
       min-height: 100vh;
     }
 
-    .panel-image {
-      background-size: cover;
-      background-position: center;
-    }
+    .panel-image { background-size: cover; background-position: center; }
 
     .panel-text {
       display: flex;
@@ -85,7 +71,7 @@
       justify-content: center;
       gap: 1.25rem;
       padding: clamp(1.5rem, 4vw, 4rem);
-      background: linear-gradient(180deg, rgba(20, 17, 44, 0.84), rgba(11, 12, 27, 0.92));
+      background: linear-gradient(180deg, rgba(9, 35, 28, 0.84), rgba(6, 20, 16, 0.92));
       border-left: 1px solid rgba(255, 255, 255, 0.14);
     }
 
@@ -97,27 +83,19 @@
       font-weight: 700;
     }
 
-    h1,
-    h2 {
-      line-height: 1.12;
-      text-wrap: balance;
-    }
+    h1, h2 { line-height: 1.12; text-wrap: balance; }
+    h1 { font-size: clamp(2rem, 4vw, 3.4rem); max-width: 18ch; }
+    h2 { font-size: clamp(1.4rem, 2.8vw, 2.3rem); }
 
-    h1 {
-      font-size: clamp(2rem, 4vw, 3.4rem);
-      max-width: 18ch;
-    }
-
-    h2 {
-      font-size: clamp(1.4rem, 2.8vw, 2.3rem);
-    }
-
-    p {
+    p,
+    li {
       color: var(--muted);
       line-height: 1.7;
-      max-width: 45ch;
-      font-size: clamp(1rem, 1.2vw, 1.15rem);
+      max-width: 55ch;
+      font-size: clamp(1rem, 1.2vw, 1.1rem);
     }
+
+    ul { padding-left: 1.15rem; display: grid; gap: 0.35rem; }
 
     .full-page {
       place-items: center;
@@ -128,7 +106,7 @@
     .floating-card {
       position: relative;
       z-index: 1;
-      width: min(90vw, 700px);
+      width: min(92vw, 760px);
       padding: clamp(1.3rem, 3.5vw, 2.5rem);
       border-radius: 20px;
       background: var(--glass);
@@ -139,13 +117,8 @@
     }
 
     @keyframes drift {
-      0%,
-      100% {
-        transform: translateY(0);
-      }
-      50% {
-        transform: translateY(-7px);
-      }
+      0%,100% { transform: translateY(0); }
+      50% { transform: translateY(-7px); }
     }
 
     .nav-dots {
@@ -162,7 +135,7 @@
       width: 10px;
       height: 10px;
       border-radius: 50%;
-      border: 1px solid rgba(255, 255, 255, 0.6);
+      border: 1px solid rgba(255, 255, 255, 0.7);
       background: transparent;
       transition: transform 250ms ease, background 250ms ease;
       cursor: pointer;
@@ -180,9 +153,9 @@
       left: 50%;
       transform: translateX(-50%);
       z-index: 98;
-      color: #d2d5ea;
-      background: rgba(9, 9, 15, 0.66);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      color: #e1f6ea;
+      background: rgba(3, 18, 13, 0.72);
+      border: 1px solid rgba(255, 255, 255, 0.18);
       border-radius: 999px;
       padding: 0.45rem 0.95rem;
       font-size: 0.83rem;
@@ -191,81 +164,85 @@
     }
 
     @media (max-width: 880px) {
-      .split-page {
-        grid-template-columns: 1fr;
-      }
-
-      .panel-image {
-        min-height: 44vh;
-      }
-
+      .split-page { grid-template-columns: 1fr; }
+      .panel-image { min-height: 44vh; }
       .panel-text {
         min-height: 56vh;
         border-left: none;
         border-top: 1px solid rgba(255, 255, 255, 0.14);
       }
-
-      .nav-dots {
-        right: 0.55rem;
-      }
+      .nav-dots { right: 0.55rem; }
     }
   </style>
 </head>
 <body>
   <nav class="nav-dots" aria-label="Page navigation"></nav>
-  <div class="hint">Scroll to turn pages</div>
+  <div class="hint">Scroll to explore the club guide</div>
 
   <section class="page split-page" id="page-1">
-    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1511497584788-876760111969?auto=format&fit=crop&w=1400&q=80');"></div>
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1626224583764-f87db24ac4ea?auto=format&fit=crop&w=1400&q=80');"></div>
     <article class="panel-text">
-      <span class="kicker">Issue 01</span>
-      <h1>Midnight District: A cinematic web graphic novel layout.</h1>
+      <span class="kicker">City Smash Club</span>
+      <h1>Welcome to our badminton club and beginner-friendly game guide.</h1>
       <p>
-        Yes—we can build exactly what you described: huge artwork on one side and immersive text on the other.
-        This demo uses page-like sections, smooth transitions, and a story rhythm you can expand with your own panels.
+        This version of the site keeps the same animated storytelling format but focuses on badminton: club culture, rules, scoring, and tournament inspiration.
       </p>
     </article>
   </section>
 
   <section class="page split-page" id="page-2">
-    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1462331940025-496dfbfc7564?auto=format&fit=crop&w=1400&q=80');"></div>
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1544525776-14a898f8f86f?auto=format&fit=crop&w=1400&q=80');"></div>
     <article class="panel-text">
-      <span class="kicker">Scene 02</span>
-      <h2>The train station trembled as aurora fire crossed the sky.</h2>
+      <span class="kicker">About the Game</span>
+      <h2>Badminton is a fast racket sport powered by reflexes, placement, and timing.</h2>
       <p>
-        Keep each page readable like a comic panel: one strong image and one focused narration block.
-        The layout is responsive, so on phones it stacks image over text to preserve pacing.
+        You can play singles (1v1) or doubles (2v2). Unlike many racket sports, players hit a shuttlecock that can exceed 300 km/h in elite play.
       </p>
     </article>
   </section>
 
-  <section class="page full-page" id="page-3" style="background-image: url('https://images.unsplash.com/photo-1494526585095-c41746248156?auto=format&fit=crop&w=1800&q=80');">
+  <section class="page full-page" id="page-3" style="background-image: url('https://images.unsplash.com/photo-1626224814784-43d5f6f8b4de?auto=format&fit=crop&w=1800&q=80');">
     <article class="floating-card">
-      <span class="kicker">Full Bleed Spread</span>
-      <h2>A full-screen panel with floating narration for dramatic beats.</h2>
-      <p>
-        Use these moments for reveals, flashbacks, title cards, or emotional peaks. The text panel floats over the art with a glass effect so details still shine through.
-      </p>
+      <span class="kicker">Quick Rules</span>
+      <h2>Core badminton rules every club member should know.</h2>
+      <ul>
+        <li>Matches are best of 3 games to 21 points.</li>
+        <li>You must win by 2 points (cap at 30 in a game).</li>
+        <li>A point is scored on every rally (rally-point system).</li>
+        <li>At 11 points, players get a short mid-game interval.</li>
+        <li>Sides are changed at the end of each game.</li>
+      </ul>
     </article>
   </section>
 
   <section class="page split-page" id="page-4">
-    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1519608487953-e999c86e7455?auto=format&fit=crop&w=1400&q=80');"></div>
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1517649763962-0c623066013b?auto=format&fit=crop&w=1400&q=80');"></div>
     <article class="panel-text">
-      <span class="kicker">Scene 04</span>
-      <h2>Every chapter can carry its own visual temperature.</h2>
+      <span class="kicker">Serving & Scoring</span>
+      <h2>Serve diagonally and keep the shuttle below waist level when striking.</h2>
       <p>
-        Swap backgrounds per scene, change accent colors, and animate page entrances with CSS to create a tactile "panel-turn" sensation.
+        In doubles, teammates alternate service courts after winning points on serve. In singles, even score serves from the right service court, odd from the left.
       </p>
     </article>
   </section>
 
-  <section class="page full-page" id="page-5" style="background-image: url('https://images.unsplash.com/photo-1419242902214-272b3f66ee7a?auto=format&fit=crop&w=1800&q=80');">
-    <article class="floating-card">
-      <span class="kicker">Chapter End</span>
-      <h2>Another full-screen frame with anchored story text.</h2>
+  <section class="page split-page" id="page-5">
+    <div class="panel-image" style="background-image: url('https://images.unsplash.com/photo-1599059813005-11265ba4b4ce?auto=format&fit=crop&w=1400&q=80');"></div>
+    <article class="panel-text">
+      <span class="kicker">Equipment & Training</span>
+      <h2>Start with a light racket, court shoes, and consistent footwork drills.</h2>
       <p>
-        This pattern is ideal for cliffhangers and chapter endings. Add sound effects, dialogue bubbles, or subtle parallax later if you want richer motion.
+        Club sessions include warmups, shadow footwork, drop-shot practice, and friendly matches. Beginners can progress quickly with regular movement and control training.
+      </p>
+    </article>
+  </section>
+
+  <section class="page full-page" id="page-6" style="background-image: url('https://images.unsplash.com/photo-1626224805558-cb1f0f9905cb?auto=format&fit=crop&w=1800&q=80');">
+    <article class="floating-card">
+      <span class="kicker">Tournament Nights</span>
+      <h2>Experience the energy of local ladders and weekend competitions.</h2>
+      <p>
+        Use this full-image style for event promotions, finals highlights, club announcements, and seasonal tournament galleries.
       </p>
     </article>
   </section>
@@ -277,7 +254,7 @@
     pages.forEach((page, index) => {
       const dot = document.createElement('button');
       dot.className = 'dot';
-      dot.setAttribute('aria-label', `Go to page ${index + 1}`);
+      dot.setAttribute('aria-label', `Go to section ${index + 1}`);
       dot.addEventListener('click', () => {
         page.scrollIntoView({ behavior: 'smooth', block: 'start' });
       });
@@ -298,9 +275,7 @@
           }
         });
       },
-      {
-        threshold: 0.5,
-      }
+      { threshold: 0.5 }
     );
 
     pages.forEach((page) => observer.observe(page));
